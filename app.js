@@ -12,7 +12,7 @@ function initMap() {
   map = L.map("map").setView([20, 0], 2);
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    attribution: '&copy; OpenStreetMap contributors'
   }).addTo(map);
 }
 
@@ -36,7 +36,10 @@ function refreshMarkers(data) {
   data.forEach(item => {
     if (item.lat && item.lng) {
       const marker = L.marker([item.lat, item.lng]).addTo(map);
-      marker.bindPopup(`<strong>${item.title}</strong><br>${item.desc}<br><span class="priority-chip ${getSeverityClass(item.severity)}">${item.severity}</span>`);
+      marker.bindPopup(
+        `<strong>${item.title}</strong><br>${item.desc}<br>
+        <span class="priority-chip ${getSeverityClass(item.severity)}">${item.severity}</span>`
+      );
       markers.push(marker);
     }
   });
@@ -48,14 +51,15 @@ function loadData() {
 
   if (!data.length) {
     list.innerHTML = "<li>No incidents yet</li>";
-    if (map) { map.setView([20,0],2); }
+    if (map) map.setView([20, 0], 2);
     return;
   }
 
   data.forEach((item, idx) => {
     const li = document.createElement("li");
     li.innerHTML = `
-      <strong>${item.title}</strong> <span class="priority-chip ${getSeverityClass(item.severity)}">${item.severity}</span><br>
+      <strong>${item.title}</strong>
+      <span class="priority-chip ${getSeverityClass(item.severity)}">${item.severity}</span><br>
       ${item.desc}<br>
       <small>${item.location || "Location not set"}</small><br>
       ${item.lat && item.lng ? `<small>Coordinates: ${item.lat.toFixed(4)}, ${item.lng.toFixed(4)}</small><br>` : ""}
@@ -77,7 +81,7 @@ function loadData() {
   if (map) refreshMarkers(data);
 }
 
-form.addEventListener("submit", async function (e) {
+form.addEventListener("submit", function (e) {
   e.preventDefault();
 
   const title = document.getElementById("title").value.trim();
@@ -154,8 +158,18 @@ async function syncData() {
 }
 
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("service-worker.js").then(() => console.log("Service Worker Registered"));
+  navigator.serviceWorker.register("service-worker.js")
+    .then(() => console.log("Service Worker Registered"));
 }
 
-initMap();
-loadData();
+/* ✅ FIX APPLIED HERE */
+window.onload = function () {
+  initMap();
+
+  // Force Leaflet to render correctly
+  setTimeout(() => {
+    map.invalidateSize();
+  }, 200);
+
+  loadData();
+};
