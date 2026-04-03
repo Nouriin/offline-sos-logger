@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CrisisLens</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-o9N1j7kFtWf5gXd8q+g082zGO20w8D+1koRKdSR+GnY=" crossorigin="" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+<header>
+  <h1><i class="fas fa-exclamation-triangle"></i> CrisisLens</h1>
+  <p id="status">Checking...</p>
+</header>
+
+<div class="container">
+
+  <div class="card">
+    <h2><i class="fas fa-plus-circle"></i> Add Incident</h2>
+    <form id="sosForm">
+      <input type="text" id="title" placeholder="Incident Type" required>
+      <textarea id="desc" placeholder="Description"></textarea>
+
+      <select id="severity" required>
+        <option value="Low">Low</option>
+        <option value="Medium">Medium</option>
+        <option value="High">High</option>
+      </select>
+
+      <input type="text" id="location" placeholder="Location (city or coordinates)">
+      <button type="button" id="locBtn"><i class="fas fa-map-marker-alt"></i> Use current location</button>
+
+      <button type="submit"><i class="fas fa-save"></i> Save</button>
+    </form>
+
+    <button onclick="syncData()"><i class="fas fa-sync"></i> Sync to Server</button>
+  </div>
+
+  <div class="card">
+    <h2><i class="fas fa-chart-bar"></i> Incident Dashboard</h2>
+    <ul id="list"></ul>
+  </div>
+
+</div>
+
+<div class="map-section">
+  <h2><i class="fas fa-map"></i> Incident Map</h2>
+  <div id="map" class="map"></div>
+</div>
+
+<footer>
+  <p>&copy; 2026 CrisisLens - Emergency Incident Logger</p>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-oQ4XPlhIHtXzUHSfG5Y8a4bWuo7W5aJk8eYipVm4Alk=" crossorigin=""></script>
+<script src="app.js"></script>
+
+</body>
+</html>

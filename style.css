@@ -1,0 +1,170 @@
+body {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(145deg, #0b1433 0%, #1c3c6f 40%, #036d80 70%, #0f766e 100%);
+  color: #f8fafc;
+  min-height: 100vh;
+  animation: gradientShift 10s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+header {
+  background: linear-gradient(145deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+  padding: 20px;
+  text-align: center;
+  border-bottom: 3px solid #38bdf8;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+h1 {
+  margin: 0;
+  font-size: 2.5em;
+  color: #38bdf8;
+}
+
+h2 {
+  color: #f1f5f9;
+  margin-bottom: 15px;
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.card {
+  background: linear-gradient(145deg, #1e293b 0%, #334155 100%);
+  padding: 25px;
+  border-radius: 15px;
+  width: calc(50% - 10px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+  border: 1px solid #475569;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.5);
+}
+
+input, textarea, select, button {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 10px;
+  border: 1px solid #94a3b8;
+  background: #2d3748;
+  color: #f8fafc;
+  font-size: 16px;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: #38bdf8;
+  box-shadow: 0 0 5px rgba(56, 189, 248, 0.5);
+}
+
+button {
+  background: linear-gradient(145deg, #38bdf8 0%, #0ea5e9 100%);
+  color: #0f172a;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+button:hover {
+  background: linear-gradient(145deg, #0ea5e9 0%, #0284c7 100%);
+  transform: scale(1.05);
+}
+
+#locBtn {
+  background: linear-gradient(145deg, #22c55e 0%, #16a34a 100%);
+}
+
+#locBtn:hover {
+  background: linear-gradient(145deg, #16a34a 0%, #15803d 100%);
+}
+
+li {
+  background: linear-gradient(145deg, #334155 0%, #475569 100%);
+  padding: 15px;
+  margin: 8px 0;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  border-left: 4px solid #38bdf8;
+}
+
+.delete-btn {
+  margin-top: 10px;
+  background: linear-gradient(145deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  width: auto;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  font-size: 14px;
+}
+
+.delete-btn:hover {
+  background: linear-gradient(145deg, #dc2626 0%, #b91c1c 100%);
+}
+
+.priority-chip {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  margin-top: 5px;
+  color: white;
+}
+
+.priority-low { background: linear-gradient(145deg, #22c55e 0%, #16a34a 100%); }
+.priority-medium { background: linear-gradient(145deg, #facc15 0%, #eab308 100%); color: #0f172a; }
+.priority-high { background: linear-gradient(145deg, #ef4444 0%, #dc2626 100%); }
+
+.map-section {
+  padding: 0 20px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+#map {
+  height: 400px;
+  border-radius: 15px;
+  border: 3px solid #38bdf8;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  background: #0f172a;
+  color: #94a3b8;
+  border-top: 1px solid #334155;
+}
+
+@media (max-width: 900px) {
+  .container { flex-direction: column; }
+  .card { width: 100%; }
+  #map { height: 300px; }
+  h1 { font-size: 2em; }
+}
+
+h2 {
+  margin-top: 0;
+}
