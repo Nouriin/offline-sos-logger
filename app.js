@@ -8,14 +8,16 @@ let map;
 let markers = [];
 let currentCoords = null;
 
+// ✅ Initialize map
 function initMap() {
   map = L.map("map").setView([20, 0], 2);
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution: '&copy; OpenStreetMap contributors'
+    attribution: "&copy; OpenStreetMap contributors"
   }).addTo(map);
 }
 
+// ✅ Online/offline status
 function updateStatus() {
   statusText.textContent = navigator.onLine ? "🟢 Online" : "🔴 Offline Mode";
 }
@@ -24,11 +26,17 @@ window.addEventListener("online", updateStatus);
 window.addEventListener("offline", updateStatus);
 updateStatus();
 
+// ✅ Severity styling
 function getSeverityClass(severity) {
   const key = severity.trim().toLowerCase();
-  return key === "high" ? "priority-high" : key === "medium" ? "priority-medium" : "priority-low";
+  return key === "high"
+    ? "priority-high"
+    : key === "medium"
+    ? "priority-medium"
+    : "priority-low";
 }
 
+// ✅ Refresh markers on map
 function refreshMarkers(data) {
   markers.forEach(m => map.removeLayer(m));
   markers = [];
@@ -45,6 +53,7 @@ function refreshMarkers(data) {
   });
 }
 
+// ✅ Load data from localStorage
 function loadData() {
   list.innerHTML = "";
   const data = JSON.parse(localStorage.getItem("sos")) || [];
@@ -62,7 +71,11 @@ function loadData() {
       <span class="priority-chip ${getSeverityClass(item.severity)}">${item.severity}</span><br>
       ${item.desc}<br>
       <small>${item.location || "Location not set"}</small><br>
-      ${item.lat && item.lng ? `<small>Coordinates: ${item.lat.toFixed(4)}, ${item.lng.toFixed(4)}</small><br>` : ""}
+      ${
+        item.lat && item.lng
+          ? `<small>Coordinates: ${item.lat.toFixed(4)}, ${item.lng.toFixed(4)}</small><br>`
+          : ""
+      }
       <button class="delete-btn" data-index="${idx}">Delete</button>
     `;
     list.appendChild(li);
@@ -81,6 +94,7 @@ function loadData() {
   if (map) refreshMarkers(data);
 }
 
+// ✅ Form submit
 form.addEventListener("submit", function (e) {
   e.preventDefault();
 
@@ -113,6 +127,7 @@ form.addEventListener("submit", function (e) {
   }
 });
 
+// ✅ Get current location
 locBtn.addEventListener("click", function () {
   if (!navigator.geolocation) {
     alert("Geolocation is not supported by this browser.");
@@ -124,11 +139,16 @@ locBtn.addEventListener("click", function () {
   navigator.geolocation.getCurrentPosition(
     position => {
       currentCoords = position.coords;
-      locationInput.value = `${position.coords.latitude.toFixed(6)}, ${position.coords.longitude.toFixed(6)}`;
+      locationInput.value = `${position.coords.latitude.toFixed(
+        6
+      )}, ${position.coords.longitude.toFixed(6)}`;
       locBtn.textContent = "📍 Use current location";
 
       if (map) {
-        map.setView([position.coords.latitude, position.coords.longitude], 13);
+        map.setView(
+          [position.coords.latitude, position.coords.longitude],
+          13
+        );
       }
     },
     () => {
@@ -138,6 +158,7 @@ locBtn.addEventListener("click", function () {
   );
 });
 
+// ✅ Sync data to backend
 async function syncData() {
   const data = JSON.parse(localStorage.getItem("sos")) || [];
 
@@ -157,19 +178,19 @@ async function syncData() {
   alert("Data synced to server!");
 }
 
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("service-worker.js")
-    .then(() => console.log("Service Worker Registered"));
-}
+// ❌ TEMPORARILY DISABLED (to avoid cache issues)
+// if ("serviceWorker" in navigator) {
+//   navigator.serviceWorker.register("service-worker.js");
+// }
 
-/* ✅ FIX APPLIED HERE */
-window.onload = function () {
+// ✅ FINAL FIX: Proper map initialization timing
+document.addEventListener("DOMContentLoaded", function () {
   initMap();
 
   // Force Leaflet to render correctly
   setTimeout(() => {
     map.invalidateSize();
-  }, 200);
+  }, 500);
 
   loadData();
-};
+});
