@@ -10,11 +10,18 @@ let currentCoords = null;
 
 // ✅ Initialize map
 function initMap() {
-  map = L.map("map").setView([20, 0], 2);
+  console.log("Map initializing..."); // DEBUG
+
+  map = L.map("map", {
+    center: [9.7167, 76.3200], // Kerala default 📍
+    zoom: 7
+  });
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: "&copy; OpenStreetMap contributors"
   }).addTo(map);
+
+  console.log("Map initialized"); // DEBUG
 }
 
 // ✅ Online/offline status
@@ -36,7 +43,7 @@ function getSeverityClass(severity) {
     : "priority-low";
 }
 
-// ✅ Refresh markers on map
+// ✅ Refresh markers
 function refreshMarkers(data) {
   markers.forEach(m => map.removeLayer(m));
   markers = [];
@@ -53,14 +60,14 @@ function refreshMarkers(data) {
   });
 }
 
-// ✅ Load data from localStorage
+// ✅ Load data
 function loadData() {
   list.innerHTML = "";
   const data = JSON.parse(localStorage.getItem("sos")) || [];
 
   if (!data.length) {
     list.innerHTML = "<li>No incidents yet</li>";
-    if (map) map.setView([20, 0], 2);
+    if (map) map.setView([9.7167, 76.3200], 7);
     return;
   }
 
@@ -123,7 +130,7 @@ form.addEventListener("submit", function (e) {
   loadData();
 
   if (newItem.lat && newItem.lng && map) {
-    map.panTo([newItem.lat, newItem.lng]);
+    map.setView([newItem.lat, newItem.lng], 13);
   }
 });
 
@@ -139,9 +146,7 @@ locBtn.addEventListener("click", function () {
   navigator.geolocation.getCurrentPosition(
     position => {
       currentCoords = position.coords;
-      locationInput.value = `${position.coords.latitude.toFixed(
-        6
-      )}, ${position.coords.longitude.toFixed(6)}`;
+      locationInput.value = `${position.coords.latitude.toFixed(6)}, ${position.coords.longitude.toFixed(6)}`;
       locBtn.textContent = "📍 Use current location";
 
       if (map) {
@@ -158,39 +163,20 @@ locBtn.addEventListener("click", function () {
   );
 });
 
-// ✅ Sync data to backend
-async function syncData() {
-  const data = JSON.parse(localStorage.getItem("sos")) || [];
+// ❌ NO SERVICE WORKER (important for now)
 
-  if (!data.length) {
-    alert("Nothing to sync.");
-    return;
-  }
-
-  for (let item of data) {
-    await fetch("http://localhost:5000/incident", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(item)
-    });
-  }
-
-  alert("Data synced to server!");
-}
-
-// ❌ TEMPORARILY DISABLED (to avoid cache issues)
-// if ("serviceWorker" in navigator) {
-//   navigator.serviceWorker.register("service-worker.js");
-// }
-
-// ✅ FINAL FIX: Proper map initialization timing
+// ✅ FINAL FIX
 document.addEventListener("DOMContentLoaded", function () {
   initMap();
 
-  // Force Leaflet to render correctly
+  // 🔥 Double fix (important)
   setTimeout(() => {
     map.invalidateSize();
   }, 500);
+
+  setTimeout(() => {
+    map.invalidateSize();
+  }, 1500);
 
   loadData();
 });
